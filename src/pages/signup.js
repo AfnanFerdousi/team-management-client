@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { useForm } from "react-hook-form"
 import Link from 'next/link';
 
-const Login = () => {
+
+const SignUp = () => {
     const {
         register,
         handleSubmit,
@@ -13,24 +14,24 @@ const Login = () => {
         formState: { errors },
     } = useForm()
 
-    const onLogin = () => {
+    const onSignup = () => {
 
     }
     return (
         <div>
             <Head>
-                <title>Login | Agile</title>
+                <title>Sign up | Agile</title>
             </Head>
 
             <div className="bg-[#FEFEFE]">
                 <div className="flex flex-col justify-center items-center h-screen gap-4">
                     <Image src={logo} alt="logo" width={150} height={150} className="mb-4" />
                     <h2 className="lg:md:text-3xl text-xl text-center font-medium text-[#1E2D40]">
-                        Welcome <span className="font-bold">Back</span>
+                        Welcome to <span className="font-bold">Agile</span>
                     </h2>
 
                     <form className="text-center"
-                        onSubmit={handleSubmit(onLogin)}>
+                        onSubmit={handleSubmit(onSignup)}>
                         <input
                             type="email"
                             placeholder="Email address"
@@ -46,12 +47,11 @@ const Login = () => {
                         />
                         {errors.password && <span className="text-red-500 text-[12px] mt-[4px]">password is required</span>}
 
-                        <p className="text-[#202020CC]">Forgot password?</p>
                         <button type="submit" className='bg-[#533FF0] text-[#FEFEFE] lg:md:text-2xl text-lg font-normal px-8 py-2 rounded-sm mt-4 w-[100%] max-w-sm'>Continue</button>
                     </form>
                     <div className="flex items-center">
-                        <p className="text-[#202020CC] mr-2">Don't have an account?</p>
-                        <Link href="/signup" className="text-[#2020204D]">Sign up</Link>
+                        <p className="text-[#202020CC] mr-2">Already have an account?</p>
+                        <Link href="/login" className="text-[#2020204D]">Login</Link>
                     </div>
                 </div>
             </div>
@@ -59,4 +59,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default SignUp;
