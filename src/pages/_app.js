@@ -1,4 +1,7 @@
 import "../styles/globals.css";
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App({
   Component,
@@ -6,5 +9,8 @@ export default function App({
 }) {
   const getLayout = Component.getLayout || ((page) => page);
 
-  return getLayout(<Component {...pageProps} />);
+  return <>
+    {getLayout(<Component {...pageProps} />)}
+    <ToastContainer />
+  </>;
 }

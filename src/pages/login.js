@@ -4,6 +4,9 @@ import logo from '../../public/logo.png';
 import Image from 'next/image';
 import { useForm } from "react-hook-form"
 import Link from 'next/link';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 const Login = () => {
     const {
@@ -13,7 +16,23 @@ const Login = () => {
         formState: { errors },
     } = useForm()
 
-    const onLogin = () => {
+    const onLogin = async (data) => {
+        try {
+            const result = await axios.post('http://localhost:5000/api/v1/auth/login', data);
+            if (result.data.statusCode === 200) {
+                console.log(result.data.data);
+                toast.success('Login successful!');
+                Cookies.set('accessToken', result?.data?.data.accessToken, { expires: 7 });
+                if (result?.data?.data?.user?.role === "user") {
+                    window.location.href = "/userHome";
+                } else if (result?.data?.data?.user?.role === "admin") {
+                    window.location.href = "/adminHome";
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Login failed. Please try again.');
+        }
 
     }
     return (
