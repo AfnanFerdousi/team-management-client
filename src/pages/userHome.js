@@ -30,6 +30,7 @@ const UserHome = () => {
                 <title>User Home | Agile</title>
             </Head>
             <div className="bg-[#FFF8F8] px-8">
+                <h2></h2>
             </div>
             {latestInvite && <div className="flex justify-center items-center">
             <InviteModal invitation={latestInvite} user={user}/>
