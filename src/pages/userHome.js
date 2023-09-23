@@ -30,7 +30,6 @@ const UserHome = () => {
                 <title>User Home | Agile</title>
             </Head>
             <div className="bg-[#FFF8F8] px-8">
-                {/* Render your user home content here */}
             </div>
             <InviteModal invitation={latestInvite} user={user} />
         </div>

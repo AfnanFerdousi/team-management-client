@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from "../../../public/logo.png";
 import Image from 'next/image';
 import man from "../../../public/man.png";
@@ -6,16 +6,17 @@ import { CiBellOn } from 'react-icons/ci';
 import useSingleUser from '../../hooks/useSingleUser';
 import useUser from '../../hooks/useUser';
 import Loader from './../shared/Loader'; // Import your loader component
+import Cookies from 'js-cookie'
 
 const Navbar = () => {
-    const user = useUser();
-    const { singleUser, loading } = useSingleUser(user.email);
+    const email = Cookies.get('email');
     const [showInvitations, setShowInvitations] = useState(false);
 
     const toggleInvitations = () => {
         setShowInvitations(!showInvitations);
     };
-
+    // Ensure user is available before fetching singleUser
+    const { singleUser, loading } =  useSingleUser(email);
     return (
         <div className="bg-[#FFF9F9] flex items-center justify-between px-8 py-4">
             <div className="flex items-center gap-x-2">
@@ -59,7 +60,11 @@ const Navbar = () => {
                         )}
                     </li>
                     <li className="border-[1px] border-[#283163] rounded-full p-[4px]">
-                        <Image src={man} alt="man" width={35} height={35} className="rounded-full " />
+                        <div className="avatar placeholder">
+                            <div className="bg-neutral-focus text-[#fff] rounded-full w-[35px] h-[35px] ">
+                                <span className="capitalize">{singleUser.username.charAt(0)}</span>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

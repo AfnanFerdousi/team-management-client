@@ -22,6 +22,7 @@ const Login = () => {
             if (result.data.statusCode === 200) {
                 console.log(result.data.data);
                 toast.success('Login successful!');
+                Cookies.set('email', result?.data?.data?.user?.email, {expires: 7})
                 Cookies.set('accessToken', result?.data?.data.accessToken, { expires: 7 });
                 if (result?.data?.data?.user?.role === "user") {
                     window.location.href = "/userHome";
