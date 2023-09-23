@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addInvitation } from '../redux/features/invite/inviteSlice';
 
 // Define a custom hook for handling invitations
 function useInvitations(socketService) {
+    const dispatch = useDispatch();
     const [uniqueInvitations, setUniqueInvitations] = useState(new Set());
 
     useEffect(() => {
@@ -16,6 +19,8 @@ function useInvitations(socketService) {
                     return updatedSet;
                 });
             }
+
+            dispatch(addInvitation(data));
         };
 
         // Add the event listener if it hasn't been added already

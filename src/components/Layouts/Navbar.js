@@ -3,9 +3,15 @@ import logo from "../../../public/logo.png"
 import Image from 'next/image';
 import man from "../../../public/man.png"
 import { CiBellOn } from 'react-icons/ci';
+import useSingleUser from '../../hooks/useSingleUser';
+import useUser from '../../hooks/useUser';
 
 
 const Navbar = () => {
+    const user = useUser();
+    const singleUser = useSingleUser(user?.email)
+
+    console.log(singleUser)
     return (
         <div className="bg-[#FFF9F9] flex items-center justify-between px-8 py-4">
             <div className="flex items-center gap-x-2">

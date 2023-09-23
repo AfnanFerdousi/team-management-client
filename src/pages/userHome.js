@@ -1,29 +1,38 @@
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import MainLayout from '../components/Layouts/MainLayout';
-import socketService from '../hooks/socketService';
-import useSocketFunctions from '../hooks/useSocketFunctions';
 import InviteModal from '../components/InviteModal';
 import useUser from '../hooks/useUser';
+import { useAppSelector, useAppDispatch } from '../redux/hook.js';
+import socketService from './../hooks/socketService';
+import { setLatestInvite } from '../redux/features/invite/inviteSlice';
 
 const UserHome = () => {
-    const invitations = useSocketFunctions.useInvitations(socketService);
-    const index = invitations.length === 0 ? 0 : invitations.length - 1;
-    const invitationToShow = invitations[index];
-    const user = useUser()
-    console.log(user)
+    const user = useUser();
+    const dispatch = useAppDispatch();
+    const latestInvite = useAppSelector((state) => state.invitations.latestInvite); 
 
-    console.log(invitations)
-    console.log(invitationToShow)
+    useEffect(() => {
+        socketService.onInvitationSent((data) => {
+            dispatch(setLatestInvite(data));
+        });
+        return () => {
+            socketService.removeInvitationSentListener();
+        };
+    }, [dispatch]);
+
+    console.log(user);
+    console.log(latestInvite);
+
     return (
         <div>
             <Head>
                 <title>User Home | Agile</title>
             </Head>
             <div className="bg-[#FFF8F8] px-8">
-
+                {/* Render your user home content here */}
             </div>
-            <InviteModal invitation={invitationToShow} />
+            <InviteModal invitation={latestInvite} user={user} />
         </div>
     );
 };
@@ -31,5 +40,5 @@ const UserHome = () => {
 export default UserHome;
 
 UserHome.getLayout = function getLayout(page) {
-  return <MainLayout> {page} </MainLayout>;
+    return <MainLayout> {page} </MainLayout>;
 }
