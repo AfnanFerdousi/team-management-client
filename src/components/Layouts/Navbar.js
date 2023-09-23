@@ -4,19 +4,31 @@ import Image from 'next/image';
 import man from "../../../public/man.png";
 import { CiBellOn } from 'react-icons/ci';
 import useSingleUser from '../../hooks/useSingleUser';
-import useUser from '../../hooks/useUser';
 import Loader from './../shared/Loader'; // Import your loader component
 import Cookies from 'js-cookie'
+import Link from "next/link"
 
 const Navbar = () => {
     const email = Cookies.get('email');
+    const { singleUser, loading } =  useSingleUser(email);
     const [showInvitations, setShowInvitations] = useState(false);
+    const [show, setShow] = useState(false);
 
     const toggleInvitations = () => {
         setShowInvitations(!showInvitations);
     };
-    // Ensure user is available before fetching singleUser
-    const { singleUser, loading } =  useSingleUser(email);
+    const toggle = () => {
+        setShow(!show)
+    }
+
+    const logout = () => {
+        Cookies.remove("accessToken")
+        Cookies.remove("email")
+
+        window.location.href = "/login"
+    }
+
+
     return (
         <div className="bg-[#FFF9F9] flex items-center justify-between px-8 py-4">
             <div className="flex items-center gap-x-2">
@@ -29,7 +41,7 @@ const Navbar = () => {
                     <li>Integration</li>
                     <li>Community</li>
                     <li className="relative">
-                        <CiBellOn className="text-[40px] border-[1px] border-[#283163] rounded-full p-2" onClick={toggleInvitations} />
+                        <CiBellOn className="text-[40px] border-[1px] border-[#283163] rounded-full p-2 cursor-pointer" onClick={toggleInvitations} />
                         {showInvitations && (
                             <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-72">
                                 <h3 className="text-[#283163] font-semibold mb-2 w-full">Team Invitations</h3>
@@ -59,12 +71,20 @@ const Navbar = () => {
                             </div>
                         )}
                     </li>
-                    <li className="border-[1px] border-[#283163] rounded-full p-[4px]">
-                        <div className="avatar placeholder">
+                    <li className="border-[1px] border-[#283163] rounded-full p-[4px] relative">
+                        <div className="avatar placeholder cursor-pointer" onClick={toggle}>
                             <div className="bg-neutral-focus text-[#fff] rounded-full w-[35px] h-[35px] ">
-                                <span className="capitalize">{singleUser.username.charAt(0)}</span>
+                                <span className="capitalize">{singleUser?.username.charAt(0)}</span>
                             </div>
                         </div>
+
+                        {show && <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-64">
+                            <ul>
+                                <li><Link href="/teams">My teams</Link></li>
+                                <li className="text-red-500 font-bold pt-2"><button onClick={logout}>logout</button></li>
+                            </ul>
+                            
+                        </div>}
                     </li>
                 </ul>
             </div>
