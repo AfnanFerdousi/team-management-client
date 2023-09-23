@@ -104,6 +104,37 @@ const SingleTeam = () => {
                     <button className="btn bg-[#fff] border-[2px] border-[#4C54F8] rounded-lg text-[#4C54F8] font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F8]">Active members ({activeMembers?.length})</button>
                     <button className="btn bg-[#fff] border-[2px] border-[#4C54F84D] rounded-lg text-[#4C54F84D] font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F84D]">Pending ({pendingMembers?.length})</button>
                 </div>
+
+                {/* table */}
+                <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
+                    <table className="w-full border-initial">
+                        <thead className="text-[#202020] text-[16px] font-bold border-b-none">
+                             <tr>
+                                <th>Name</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Role</th>
+                             </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="border-[1px] border-[#3267B1] rounded-lg">
+                                <td className="flex items-center gap-x-4 p-2">
+                                    <div className="avatar placeholder">
+  <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
+    <span>M</span>
+  </div>
+</div> 
+<div>
+    <h2 className="text-[#202020] font-bold text-[16px]">Muhammad</h2>
+    <h2 className="text-[#20202099]  text-[12px]">info@gmail.com</h2>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+
+                </div>
             </div>
             {latestInvite && <div className="flex justify-center items-center">
                 <InviteModal invitation={latestInvite} user={user} />
