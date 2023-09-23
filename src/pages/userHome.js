@@ -31,7 +31,9 @@ const UserHome = () => {
             </Head>
             <div className="bg-[#FFF8F8] px-8">
             </div>
-            <InviteModal invitation={latestInvite} user={user} />
+            {latestInvite && <div className="flex justify-center items-center">
+            <InviteModal invitation={latestInvite} user={user}/>
+            </div>}
         </div>
     );
 };
