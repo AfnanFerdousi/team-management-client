@@ -66,7 +66,7 @@ const SingleTeam = () => {
             }
         }
 
-         const getUsersWithStatus = async () => {
+        const getUsersWithStatus = async () => {
             try {
                 const result = await axios.get(`http://localhost:5000/api/v1/user?teamName=${teamName}?status=${status}`, {
                     headers: {
@@ -74,9 +74,9 @@ const SingleTeam = () => {
                     }
                 });
                 if (result.status === 200) {
-                   if(status === "active"){
-                     setActiveMembers(result?.data?.data)
-                   }
+                    if (status === "active") {
+                        setActiveMembers(result?.data?.data)
+                    }
                     console.log(result);
                 }
             } catch (error) {
@@ -107,31 +107,41 @@ const SingleTeam = () => {
 
                 {/* table */}
                 <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
-                    <table className="w-full border-initial">
+                    <table className="w-full text-left ">
                         <thead className="text-[#202020] text-[16px] font-bold border-b-none">
-                             <tr>
-                                <th>Name</th>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Role</th>
-                             </tr>
+                            <tr>
+                                <th className='pl-[4rem] pb-4'>Name</th>                                
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                            <tr className="border-[1px] border-[#3267B1] rounded-lg">
+                        <tbody className="pt-4">
+                          {user && users?.map((user) => {
+                            const team = user?.teams.find((team) => team.teamName === teamName);
+        const teamRole = team ? team.teamRole : "";
+        const status = team ? team.status : "";
+                            return (
+                                  <tr className="mb-2 border-[1px] border-[#3267B1] !rounded-xl" key={user?._id}>
                                 <td className="flex items-center gap-x-4 p-2">
                                     <div className="avatar placeholder">
-  <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
-    <span>M</span>
-  </div>
-</div> 
-<div>
-    <h2 className="text-[#202020] font-bold text-[16px]">Muhammad</h2>
-    <h2 className="text-[#20202099]  text-[12px]">info@gmail.com</h2>
-</div>
+                                        <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
+                                            <span className="capitalize">{user?.username?.charAt(0)}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-[#202020] font-bold text-[16px] capitalize">{user?.username}</h2>
+                                        <h2 className="text-[#20202099]  text-[12px]">{user?.email}</h2>
+                                    </div>
                                 </td>
+                                 <td className=" capitalize">{teamRole}</td>
+                            <td className=" capitalize">{status}</td>
+                            <td className="capitalize">{teamRole}</td>
                             </tr>
+                            )
+                          })}
                         </tbody>
-                        
+
                     </table>
 
                 </div>
