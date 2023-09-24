@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MainLayout from '../components/Layouts/MainLayout';
 import Head from "next/head"
 import useSingleUser from '../hooks/useSingleUser';
 import Cookies from 'js-cookie';
 import { BsPlus } from 'react-icons/bs';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTeams, selectError, selectStatus, selectTeams } from '../redux/features/team/teamSlice';
+import TeamCard from '../components/shared/TeamCard';
+import Loader from '../components/shared/Loader';
 
 const AdminHome = () => {
     const email = Cookies.get("email")
-     const singleUser = useSingleUser(email)
-     console.log(singleUser)
+    const singleUser = useSingleUser(email)
+    const dispatch = useDispatch();
+    const teamData = useSelector(selectTeams);
+    const status = useSelector(selectStatus);
+    const error = useSelector(selectError);
+    console.log(error)
+
+    useEffect(() => {
+        // Dispatch the fetchTeams action to get teams when the component mounts
+        dispatch(fetchTeams());
+    }, [dispatch]);
+
+    const handleCreateTeam = () => {
+        const newTeamData = {
+            // Populate this object with your new team data
+        };
+
+        dispatch(createNewTeam(newTeamData));
+    };
+
+    console.log(teamData?.data?.data)
+    const teams = teamData?.data?.data
+     
     return (
         <div>
             <Head>
@@ -29,6 +54,21 @@ const AdminHome = () => {
                 ) : (
                     <h2 className="text-[#000] text-xl font-bold">My teams</h2>
                 )}
+
+                <div className="grid grid-cols-3 gap-x-4 my-16">
+                    {status === "loading" ?
+                     <Loader/> 
+                     : status === "failed" ? (
+                        <p>Error: {error}</p>
+                     ) : (
+                        teams.map((team) => {
+                            return(
+                                <TeamCard team={team} key={team?._id}/>
+                            )
+                        })
+                     )
+                    }
+                </div>
             </div>
             
         </div>

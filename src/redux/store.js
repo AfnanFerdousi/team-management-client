@@ -6,7 +6,7 @@ import teamSlice from './features/team/teamSlice';
 
 const store = configureStore({
     reducer: {
-        teams: teamSlice.reducer,
+        teams: teamSlice,
         invitations: inviteSlice,
         [api.reducerPath]: api.reducer,
     },
