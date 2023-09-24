@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MainLayout from '../components/Layouts/MainLayout';
 import Head from "next/head"
 import useSingleUser from '../hooks/useSingleUser';
 import Cookies from 'js-cookie';
 import { BsPlus } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTeams, selectError, selectStatus, selectTeams } from '../redux/features/team/teamSlice';
+import { fetchTeams, selectError, selectStatus, selectTeams, openModal } from '../redux/features/team/teamSlice';
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
 import { baseUrl } from '../../config';
+import CreateTeamModal from '../components/CreateTeamModal';
 
 const AdminHome = () => {
     const email = Cookies.get("email")
@@ -17,6 +18,7 @@ const AdminHome = () => {
     const teamData = useSelector(selectTeams);
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     console.log(error)
 
     
@@ -25,16 +27,15 @@ const AdminHome = () => {
         dispatch(fetchTeams());
     }, [dispatch]);
 
-    const handleCreateTeam = () => {
-        const newTeamData = {
-            // Populate this object with your new team data
-        };
+   
 
-        dispatch(createNewTeam(newTeamData));
+    const handleCreateTeam = () => {
+        // Open the modal when the button is clicked
+        setIsModalOpen(true);
     };
 
-    console.log(singleUser?.singleUser?.teams)
-    const teams = singleUser && singleUser?.singleUser?.role === "admin" ? teamData?.data?.data : singleUser?.singleUser?.teams
+    console.log(teamData)
+    const teams = singleUser && singleUser?.singleUser?.role === "admin" ? teamData?.data : singleUser?.singleUser?.teams
      
     return (
         <div>
@@ -50,7 +51,7 @@ const AdminHome = () => {
                           <p className="mt-2 font-semibold text-md text-[#20202099]">Existing teams</p>
                       </div>
                         <div className="flex items-center gap-x-4 hover:text-[#fff]">
-                            <button className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8] flex items-center gap-x-2 text-md"><BsPlus className="text-lg"/>Create a team</button>
+                            <button onClick={() => document.getElementById('my_modal_1').showModal()} className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8] flex items-center gap-x-2 text-md"><BsPlus className="text-lg"/>Create a team</button>
                         </div>
                     </div>
                 ) : (
@@ -72,7 +73,9 @@ const AdminHome = () => {
                     }
                 </div>
             </div>
-            
+            <dialog id="my_modal_1" className="modal">
+            <CreateTeamModal />
+             </dialog>
         </div>
     );
 };

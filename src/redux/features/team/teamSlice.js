@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { baseUrl } from '../../../../config';
@@ -13,7 +13,7 @@ export const fetchTeams = createAsyncThunk('/team', async () => {
                 authorization: `${token}`, // Include the token in the headers
             },
         });
-        return response; // Return the entire response object
+        return response?.data; // Return the entire response object
     } catch (error) {
         throw error; // Throw the error so it can be caught by the rejected action
     }
@@ -42,12 +42,23 @@ export const createNewTeam = createAsyncThunk(
 const teamSlice = createSlice({
     name: 'teams',
     initialState: {
-        teams: null, // Initial state for teams
-        status: 'idle', // Async request status
-        error: null, // Error message
+        teams: null,
+        status: 'idle',
+        error: null,
+        formData: {
+            teamName: '',
+            teamCategory: '',
+            logo: '',
+            description: '',
+        },
+        currentStep: 1,
     },
     reducers: {
         // Other reducer actions if needed
+        incrementStep: (state) => {
+            // Increment the current step
+            state.currentStep += 1;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -73,8 +84,14 @@ const teamSlice = createSlice({
     },
 });
 
-export const { /* other actions if needed */ } = teamSlice.actions;
+export const { incrementStep } = teamSlice.actions;
 export const selectTeams = (state) => state.teams?.teams;
 export const selectStatus = (state) => state.teams?.status;
 export const selectError = (state) => state.teams?.error;
+export const openModal = createAction('team/openModal');
+export const closeModal = createAction('team/closeModal');
+export const updateFormData = createAction('team/updateFormData');
+
+export const selectCurrentStep = (state) => state.teams.currentStep;
+
 export default teamSlice.reducer;
