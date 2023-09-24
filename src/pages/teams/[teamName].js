@@ -24,9 +24,9 @@ const SingleTeam = () => {
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
 
     useEffect(() => {
-            socketService.onInvitationSent((data) => {
-                dispatch(setLatestInvite(data));
-            });
+        socketService.onInvitationSent((data) => {
+            dispatch(setLatestInvite(data));
+        });
         return () => {
             socketService.removeInvitationSentListener();
         };
@@ -157,9 +157,11 @@ const SingleTeam = () => {
                     )}
                 </div>
             </div>
-            {latestInvite && <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
+            {latestInvite &&
+                <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
                 <InviteModal invitation={latestInvite} user={user} />
-            </div>}
+                </div>               
+            }
         </div>
     );
 };
