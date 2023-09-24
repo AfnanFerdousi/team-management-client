@@ -8,19 +8,19 @@ import MainLayout from '../../components/Layouts/MainLayout';
 import { setLatestInvite } from '../../redux/features/invite/inviteSlice';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import axios from 'axios'
+import axios from 'axios';
+import Loader from '../../components/shared/Loader';
+import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
 
 const SingleTeam = () => {
-    const token = Cookies.get("accessToken")
-    const { teamName } = useRouter().query
-    console.log(teamName)
+    const token = Cookies.get("accessToken");
+    const { teamName } = useRouter().query;
     const user = useUser();
     const dispatch = useAppDispatch();
-    const [singleTeam, setSingleTeam] = useState();
-    const [users, setUsers] = useState([])
-    const [status, setStatus] = useState("active")
-    const [activeMembers, setActiveMembers] = useState([])
-    const [pendingMembers, setPendingMembers] = useState([])
+    const [status, setStatus] = useState("active");
+    const [loading, setLoading] = useState(true);
+    const [activeMembers, setActiveMembers] = useState([]);
+    const [pendingMembers, setPendingMembers] = useState([]);
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
 
     useEffect(() => {
@@ -33,64 +33,31 @@ const SingleTeam = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        console.log(token)
-        const getSingleTeam = async () => {
+        const fetchData = async (status) => {
             try {
-                const result = await axios.get(`http://localhost:5000/api/v1/team/${teamName}`, {
+                setLoading(true);
+                const url = `http://localhost:5000/api/v1/user?teamName=${teamName}&status=${status}`
+                const result = await axios.get(url, {
                     headers: {
-                        authorization: `${token}`
-                    }
-                });
-                if (result.status === 200) {
-                    console.log(result)
-                    setSingleTeam(result.data.data);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        const getUsersWithSameTeam = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5000/api/v1/user?teamName=${teamName}`, {
-                    headers: {
-                        authorization: `${token}`
-                    }
-                });
-                if (result.status === 200) {
-                    setUsers(result?.data?.data)
-                    console.log(result);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        const getUsersWithStatus = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5000/api/v1/user?teamName=${teamName}?status=${status}`, {
-                    headers: {
-                        authorization: `${token}`
-                    }
+                        authorization: `${token}`,
+                    },
                 });
                 if (result.status === 200) {
                     if (status === "active") {
-                        setActiveMembers(result?.data?.data)
+                        setActiveMembers(result?.data?.data);
+                    } else if (status === "pending") {
+                        setPendingMembers(result?.data?.data);
                     }
-                    console.log(result);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
+                setLoading(false);
             }
-        }
-        getSingleTeam();
-        getUsersWithSameTeam()
-        getUsersWithStatus()
-    }, [teamName])
+        };
 
-    console.log(singleTeam)
-    console.log(users)
-
+        fetchData(status);
+    }, [teamName, status, token]);
 
 
     return (
@@ -99,51 +66,95 @@ const SingleTeam = () => {
                 <title>Team | Agile</title>
             </Head>
             <div className="bg-[#FFF8F8] px-8 py-8">
-                <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
+                {user && user?.user?.role === "admin" ?  (
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
+                        <div className="flex items-center gap-x-4">
+                            <button className="btn capitalize capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8]">Assign a group </button>
+                            <button className="btn capitalize bg-[#4C54F8] text-[#fff] font-bold hover:border-[#4C54F8] hover:bg-transparent border-[2px] border-[#4C54F8] hover:text-[#4C54F8]">Add a member </button>
+                        </div>
+                        </div>
+                ) : (
+                  <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
+                )}
+                
                 <div className="flex items-center gap-x-4 pt-4">
-                    <button className="btn bg-[#fff] border-[2px] border-[#4C54F8] rounded-lg text-[#4C54F8] font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F8]">Active members ({activeMembers?.length})</button>
-                    <button className="btn bg-[#fff] border-[2px] border-[#4C54F84D] rounded-lg text-[#4C54F84D] font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F84D]">Pending ({pendingMembers?.length})</button>
+                    <button
+                        className={`btn bg-[#fff] border-[2px]rounded-lg   font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F84D] ${status === "active" ? 'border-[#4C54F8] border-[2px] text-[#4C54F8]' : 'border-[#4C54F84D] text-[#4C54F84D]'}`}
+                        onClick={() => setStatus("active")}
+                    >
+                        Active members ({activeMembers?.length})
+                    </button>
+                    <button
+                        className={`btn bg-[#fff] border-[2px]rounded-lg   font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F84D] ${status === "pending" ? 'border-[#4C54F8] border-[2px] text-[#4C54F8]' : 'border-[#4C54F84D] text-[#4C54F84D]'}`}
+                        onClick={() => setStatus("pending")}
+                    >
+                        Pending ({pendingMembers?.length})
+                    </button>
+                </div>
+
+                <div className=" -space-x-2 my-6">
+                    {user && (status === "active" ? activeMembers : pendingMembers).map((user) => {
+                        return (
+                            <div className="avatar placeholder">
+                                <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-12 border-[2px] border-[#3267B1]">
+                                    <span className="capitalize font-bold">{user?.username?.charAt(0)}</span>
+                                </div>
+                            </div>
+                        )
+                    })}
+
                 </div>
 
                 {/* table */}
                 <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
-                    <table className="w-full text-left ">
+                    <table className="w-full text-left">
                         <thead className="text-[#202020] text-[16px] font-bold border-b-none">
                             <tr>
-                                <th className='pl-[4rem] pb-4'>Name</th>                                
+                                <th className='pl-[4rem] pb-4 w-[41%]'>Name</th>
                                 <th>Title</th>
-                                <th>Status</th>
-                                <th>Role</th>
+                                <th className="w-[20%]">Status</th>
+                                <th className="w-[21%]">Role</th>
+                                <th></th>
                             </tr>
                         </thead>
-                        <tbody className="pt-4">
-                          {user && users?.map((user) => {
-                            const team = user?.teams.find((team) => team.teamName === teamName);
-        const teamRole = team ? team.teamRole : "";
-        const status = team ? team.status : "";
-                            return (
-                                  <tr className="mb-2 border-[1px] border-[#3267B1] !rounded-xl" key={user?._id}>
-                                <td className="flex items-center gap-x-4 p-2">
-                                    <div className="avatar placeholder">
-                                        <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
-                                            <span className="capitalize">{user?.username?.charAt(0)}</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-[#202020] font-bold text-[16px] capitalize">{user?.username}</h2>
-                                        <h2 className="text-[#20202099]  text-[12px]">{user?.email}</h2>
-                                    </div>
-                                </td>
-                                 <td className=" capitalize">{teamRole}</td>
-                            <td className=" capitalize">{status}</td>
-                            <td className="capitalize">{teamRole}</td>
-                            </tr>
-                            )
-                          })}
-                        </tbody>
-
                     </table>
 
+                    {loading ? (
+                        <Loader />
+                    ) : (
+                        <table className="w-full text-left">
+                            <tbody className="pt-4 gap-y-2">
+                                {user && (status === "active" ? activeMembers : pendingMembers).map((user) => {
+                                    const team = user?.teams.find((team) => team.teamName === teamName);
+                                    const teamRole = team ? team.teamRole : "";
+                                    const status = team ? team.status : "";
+                                    return (
+                                        <tr className="mb-2 border-[1px] border-[#3267B1] !rounded-xl" key={user?._id}>
+                                            <td className="flex items-center gap-x-4 p-2 ">
+                                                <div className="avatar placeholder">
+                                                    <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
+                                                        <span className="capitalize">{user?.username?.charAt(0)}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h2 className="text-[#202020] font-bold text-[16px] capitalize">{user?.username}</h2>
+                                                    <h2 className="text-[#20202099]  text-[12px]">{user?.email}</h2>
+                                                </div>
+                                            </td>
+                                            <td className=" capitalize">{teamRole}</td>
+                                            <td className=" capitalize">{status}</td>
+                                            <td className="capitalize text-center">{teamRole}</td>
+                                            <td className="flex items-center gap-x-2">
+                                                <button><IoIosArrowDown/></button>
+                                                <button><IoIosClose/></button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
             {latestInvite && <div className="flex justify-center items-center">
@@ -157,4 +168,4 @@ export default SingleTeam;
 
 SingleTeam.getLayout = function getLayout(page) {
     return <MainLayout> {page} </MainLayout>;
-}
+};
