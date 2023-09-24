@@ -23,17 +23,16 @@ const AdminHome = () => {
 
     
     useEffect(() => {
-        // Dispatch the fetchTeams action to get teams when the component mounts
         dispatch(fetchTeams());
     }, [dispatch]);
 
-   
-
-    const handleCreateTeam = () => {
-        // Open the modal when the button is clicked
+    const openCreateTeamModal = () => {
         setIsModalOpen(true);
     };
 
+    const closeCreateTeamModal = () => {
+        setIsModalOpen(false);
+    };
     console.log(teamData)
     const teams = singleUser && singleUser?.singleUser?.role === "admin" ? teamData?.data : singleUser?.singleUser?.teams
      
@@ -51,7 +50,7 @@ const AdminHome = () => {
                           <p className="mt-2 font-semibold text-md text-[#20202099]">Existing teams</p>
                       </div>
                         <div className="flex items-center gap-x-4 hover:text-[#fff]">
-                            <button onClick={() => document.getElementById('my_modal_1').showModal()} className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8] flex items-center gap-x-2 text-md"><BsPlus className="text-lg"/>Create a team</button>
+                            <button onClick={() => openCreateTeamModal()} className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8] flex items-center gap-x-2 text-md"><BsPlus className="text-lg"/>Create a team</button>
                         </div>
                     </div>
                 ) : (
@@ -72,10 +71,14 @@ const AdminHome = () => {
                      )
                     }
                 </div>
-            </div>
-            <dialog id="my_modal_1" className="modal">
-            <CreateTeamModal />
-             </dialog>
+            </div>         
+                        <dialog
+                id="my_modal_1"
+                className="modal"
+                open={isModalOpen} // Use the open attribu
+            >
+                <CreateTeamModal closeModal={closeCreateTeamModal} />
+            </dialog>
         </div>
     );
 };

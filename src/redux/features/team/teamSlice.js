@@ -34,6 +34,7 @@ export const createNewTeam = createAsyncThunk(
             body: JSON.stringify(teamData),
         });
         const data = await response.json();
+        
         return data;
     }
 );
@@ -42,7 +43,7 @@ export const createNewTeam = createAsyncThunk(
 const teamSlice = createSlice({
     name: 'teams',
     initialState: {
-        teams: null,
+        teams: [],
         status: 'idle',
         error: null,
         formData: {
@@ -75,7 +76,6 @@ const teamSlice = createSlice({
             })
             .addCase(createNewTeam.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.teams.push(action.payload);
             })
             .addCase(createNewTeam.rejected, (state, action) => {
                 state.status = 'failed';
