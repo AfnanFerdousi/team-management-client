@@ -17,7 +17,7 @@ const Navbar = () => {
     const { singleUser, loading } =  useSingleUser(email);
     const [showInvitations, setShowInvitations] = useState(false);
     const [show, setShow] = useState(false);
-    const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
+    const [notificationCount, setNotificationCount] = useState(0);
     const [dismissedInvitations, setDismissedInvitations] = useState([]);
     const toggleInvitations = () => {
         setShowInvitations(!showInvitations);
@@ -37,7 +37,8 @@ const Navbar = () => {
     // console.log(user)
     useEffect(() => {
         if (singleUser) {
-            setDismissedInvitations([]); // Reset dismissed invitations when the user data changes
+            setDismissedInvitations([]);
+            setNotificationCount(singleUser.notifications.length);
         }
     }, [singleUser]);
 
@@ -46,7 +47,7 @@ const Navbar = () => {
         dispatch(rejectInvitation({ userId: singleUser._id, teamName }));
         setDismissedInvitations([...dismissedInvitations, teamName]);
         toast.success('Invitation rejected!');
-       
+       setNotificationCount(notificationCount - 1)
         // You can also handle the modal closing logic here
         setShow(false);
     };
@@ -56,6 +57,7 @@ const Navbar = () => {
         dispatch(acceptInvitation({ userId: singleUser._id, teamName }));
         setDismissedInvitations([...dismissedInvitations, teamName]);
         toast.success('Invitation accepted!');
+        setNotificationCount(notificationCount - 1)
         // You can also handle the modal closing logic here
         setShow(false);
     };
@@ -74,7 +76,7 @@ const Navbar = () => {
                     <li className="relative z-10">
                         <CiBellOn className="text-[40px] border-[1px] border-[#283163] rounded-full p-2 cursor-pointer" onClick={toggleInvitations} />
                         {showInvitations && (
-                            <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-72">
+                            <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-72 max-h-[50vh] overflow-y-auto">
                                 <h3 className="text-[#283163] font-semibold mb-2 w-full">Team Invitations</h3>
                                 {loading ? (
                                     <Loader /> // Display the loader while loading
@@ -111,11 +113,11 @@ const Navbar = () => {
                         {/* Notification count badge */}
                         {!loading && singleUser && (
                             <div className="bg-[#679AFA] text-white rounded-full w-6 h-6 flex items-center justify-center absolute -top-1 -right-1 text-[12px] font-bold">
-                                { singleUser.notifications.length}
+                                {notificationCount}
                             </div>
                         )}
                     </li>
-                    <li className="border-[1px] border-[#283163] rounded-full p-[4px] relative">
+                    <li className="border-[1px] border-[#283163] rounded-full p-[4px] relative z-10">
                         <div className="avatar placeholder cursor-pointer" onClick={toggle}>
                             <div className="bg-neutral-focus text-[#fff] rounded-full w-[35px] h-[35px] ">
                                 <span className="capitalize">{singleUser?.username.charAt(0)}</span>
