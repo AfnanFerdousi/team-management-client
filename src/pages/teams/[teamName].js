@@ -11,11 +11,14 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import Loader from '../../components/shared/Loader';
 import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
+import useSingleUser from '../../hooks/useSingleUser';
 
 const SingleTeam = () => {
     const token = Cookies.get("accessToken");
+    const email = Cookies.get("email");
     const { teamName } = useRouter().query;
     const user = useUser();
+    const singleUser = useSingleUser(email)
     const dispatch = useAppDispatch();
     const [status, setStatus] = useState("active");
     const [loading, setLoading] = useState(true);
@@ -159,7 +162,7 @@ const SingleTeam = () => {
             </div>
             {latestInvite &&
                 <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
-                <InviteModal invitation={latestInvite} user={user} />
+                    <InviteModal invitation={latestInvite} user={singleUser} />
                 </div>               
             }
         </div>

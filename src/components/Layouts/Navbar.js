@@ -7,13 +7,18 @@ import useSingleUser from '../../hooks/useSingleUser';
 import Loader from './../shared/Loader'; // Import your loader component
 import Cookies from 'js-cookie'
 import Link from "next/link"
+import { useDispatch } from 'react-redux';
+import { acceptInvitation, rejectInvitation } from '../../redux/features/invite/inviteSlice';
+import { useAppSelector } from '../../redux/hook';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
     const email = Cookies.get('email');
     const { singleUser, loading } =  useSingleUser(email);
     const [showInvitations, setShowInvitations] = useState(false);
     const [show, setShow] = useState(false);
-
+    const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
+    const [dismissedInvitations, setDismissedInvitations] = useState([]);
     const toggleInvitations = () => {
         setShowInvitations(!showInvitations);
     };
@@ -28,6 +33,32 @@ const Navbar = () => {
         window.location.href = "/login"
     }
 
+    const dispatch = useDispatch(); // Get the dispatch function from Redux
+    // console.log(user)
+    useEffect(() => {
+        if (singleUser) {
+            setDismissedInvitations([]); // Reset dismissed invitations when the user data changes
+        }
+    }, [singleUser]);
+
+    const onReject = (teamName) => {
+        // Dispatch the rejectInvitation action
+        dispatch(rejectInvitation({ userId: singleUser._id, teamName }));
+        setDismissedInvitations([...dismissedInvitations, teamName]);
+        toast.success('Invitation rejected!');
+       
+        // You can also handle the modal closing logic here
+        setShow(false);
+    };
+
+    const onAccept = (teamName) => {
+        // Dispatch the acceptInvitation action
+        dispatch(acceptInvitation({ userId: singleUser._id, teamName }));
+        setDismissedInvitations([...dismissedInvitations, teamName]);
+        toast.success('Invitation accepted!');
+        // You can also handle the modal closing logic here
+        setShow(false);
+    };
 
     return (
         <div className="bg-[#FFF9F9] flex items-center justify-between px-8 py-4">
@@ -40,7 +71,7 @@ const Navbar = () => {
                     <li>Availability</li>
                     <li>Integration</li>
                     <li>Community</li>
-                    <li className="relative">
+                    <li className="relative z-10">
                         <CiBellOn className="text-[40px] border-[1px] border-[#283163] rounded-full p-2 cursor-pointer" onClick={toggleInvitations} />
                         {showInvitations && (
                             <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-72">
@@ -48,18 +79,31 @@ const Navbar = () => {
                                 {loading ? (
                                     <Loader /> // Display the loader while loading
                                 ) : (
-                                    singleUser?.notifications.map((invitation) => (
-                                        <div className="alert flex flex-col mb-2 bg-[#f7f7f7] " style={{ border: ".3px #ddd solid" }} key={invitation?._id}>
+                                        singleUser?.notifications.map((invitation) => {
+                                            if (dismissedInvitations.includes(invitation?.teamName)) {
+                                                // Skip rendering dismissed invitations
+                                                return null;
+                                            }
+                                            return (
+                                                <div
+                                                    className={`alert flex flex-col mb-2 bg-[#f7f7f7] transition-opacity duration-500 ease-in-out ${dismissedInvitations.includes(invitation?.teamName)
+                                                        ? 'opacity-0' // Apply opacity transition
+                                                        : ''
+                                                        }`}
+                                                    style={{ border: ".3px #ddd solid" }}
+                                                    key={invitation?._id}
+                                                >
                                             <div className="flex" >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 <span className="pl-2 text-[#283163]">You got an invitation from {invitation?.teamName}</span>
                                             </div>
                                             <div className="flex justify-between items-center w-full">
-                                                <button className="text-red-500 font-bold">Reject</button>
-                                                <button className="text-green-500 font-bold">Accept</button>
+                                                <button onClick={() => onReject(invitation?.teamName)} className="text-red-500 font-bold">Reject</button>
+                                                <button onClick={() => onAccept(invitation?.teamName)} className="text-green-500 font-bold">Accept</button>
                                             </div>
                                         </div>
-                                    ))
+                                    )}
+                                    )
                                 )}
                             </div>
                         )}
@@ -67,7 +111,7 @@ const Navbar = () => {
                         {/* Notification count badge */}
                         {!loading && singleUser && (
                             <div className="bg-[#679AFA] text-white rounded-full w-6 h-6 flex items-center justify-center absolute -top-1 -right-1 text-[12px] font-bold">
-                                {singleUser.notifications.length}
+                                { singleUser.notifications.length}
                             </div>
                         )}
                     </li>

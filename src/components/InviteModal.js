@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { IoIosClose } from 'react-icons/io';
+import { useDispatch } from 'react-redux';
 
 const InviteModal = ({ invitation, user }) => {
   const [show, setShow] = useState(true)
+  const dispatch = useDispatch(); // Get the dispatch function from Redux
+console.log(user)
   const onReject = () => {
+    // Dispatch the rejectInvitation action
+    dispatch(rejectInvitation({ userId: user._id, teamName: invitation.teamName }));
+    // You can also handle the modal closing logic here
+    setShow(false);
+  };
 
-  }
   const onAccept = () => {
-    
-  }
+    // Dispatch the acceptInvitation action
+    dispatch(acceptInvitation({ userId: user._id, teamName: invitation.teamName }));
+    // You can also handle the modal closing logic here
+    setShow(false);
+  };
   return (
     <div className={`bg-[#FEFEFE] border-[1px] border-[#2020204D] rounded-lg w-[35vw]  ${show ? ' block' : 'hidden'} `}>
       <div className="p-4 m-6">
