@@ -24,11 +24,7 @@ const Login = () => {
                 toast.success('Login successful!');
                 Cookies.set('email', result?.data?.data?.user?.email, {expires: 7})
                 Cookies.set('accessToken', result?.data?.data.accessToken, { expires: 7 });
-                if (result?.data?.data?.user?.role === "user") {
-                    window.location.href = "/userHome";
-                } else if (result?.data?.data?.user?.role === "admin") {
-                    window.location.href = "/adminHome";
-                }
+                    window.location.href = "/home";
             }
         } catch (error) {
             console.error(error);

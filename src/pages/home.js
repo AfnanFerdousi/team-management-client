@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeams, selectError, selectStatus, selectTeams } from '../redux/features/team/teamSlice';
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
+import { baseUrl } from '../../config';
 
 const AdminHome = () => {
     const email = Cookies.get("email")
@@ -18,6 +19,7 @@ const AdminHome = () => {
     const error = useSelector(selectError);
     console.log(error)
 
+    
     useEffect(() => {
         // Dispatch the fetchTeams action to get teams when the component mounts
         dispatch(fetchTeams());
@@ -31,8 +33,8 @@ const AdminHome = () => {
         dispatch(createNewTeam(newTeamData));
     };
 
-    console.log(teamData?.data?.data)
-    const teams = teamData?.data?.data
+    console.log(singleUser?.singleUser?.teams)
+    const teams = singleUser && singleUser?.singleUser?.role === "admin" ? teamData?.data?.data : singleUser?.singleUser?.teams
      
     return (
         <div>
@@ -61,7 +63,7 @@ const AdminHome = () => {
                      : status === "failed" ? (
                         <p>Error: {error}</p>
                      ) : (
-                        teams.map((team) => {
+                        teams && teams.map((team) => {
                             return(
                                 <TeamCard team={team} key={team?._id}/>
                             )
