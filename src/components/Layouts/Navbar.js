@@ -71,7 +71,7 @@ const Navbar = () => {
             <div>
                 <ul className="flex items-center gap-x-4 text-[#283163] relative">
                     <li>Availability</li>
-                    <li>Integration</li>
+                    <li>Integration</li> 
                     <li>Community</li>
                     <li className="relative z-10">
                         <CiBellOn className="text-[40px] border-[1px] border-[#283163] rounded-full p-2 cursor-pointer" onClick={toggleInvitations} />

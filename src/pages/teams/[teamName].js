@@ -66,7 +66,7 @@ const SingleTeam = () => {
     return (
         <div>
             <Head>
-                <title>Team | Agile</title>
+                <title>{teamName} | Agile</title>
             </Head>
             <div className="bg-[#FFF8F8] px-8 py-8 relative">
                 {user && user?.user?.role === "admin" ? (
