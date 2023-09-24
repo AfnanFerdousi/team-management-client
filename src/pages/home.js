@@ -21,10 +21,7 @@ const AdminHome = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     console.log(error)
 
-    
-    useEffect(() => {
-        dispatch(fetchTeams());
-    }, [dispatch]);
+
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
@@ -57,7 +54,7 @@ const AdminHome = () => {
                     <h2 className="text-[#000] text-xl font-bold">My teams</h2>
                 )}
 
-                <div className="grid grid-cols-3 gap-x-4 my-16">
+                <div className="grid grid-cols-3 gap-x-6 my-16 gap-y-10">
                     {status === "loading" ?
                      <Loader/> 
                      : status === "failed" ? (
