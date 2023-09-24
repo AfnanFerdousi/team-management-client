@@ -7,6 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import socketService from '../hooks/socketService';
 
 const Login = () => {
     const {
@@ -21,6 +22,7 @@ const Login = () => {
             const result = await axios.post('http://localhost:5000/api/v1/auth/login', data);
             if (result.data.statusCode === 200) {
                 console.log(result.data.data);
+                socketService.authenticate(result?.data?.data?.user?.email);
                 toast.success('Login successful!');
                 Cookies.set('email', result?.data?.data?.user?.email, {expires: 7})
                 Cookies.set('accessToken', result?.data?.data.accessToken, { expires: 7 });

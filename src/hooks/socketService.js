@@ -1,18 +1,22 @@
 // socketService.js
 
+import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:5000'); // Replace with your server URL
 
 let invitationSentListenerAdded = false;
+const email = Cookies.get("email");
 
 // Define event handlers or functions for sending messages
 const socketService = {
-    onInvitationSent: (callback) => {
+    onInvitationSent: ( callback) => {
         socket.on('invitationSent', (data) => {
-            console.log(data);
-            if (callback && typeof callback === 'function') {
-                callback(data);
+            // Check if data.email is defined and matches the logged-in user's email
+            if (data.email && data.email === email) {
+                if (callback && typeof callback === 'function') {
+                    callback(data);
+                }
             }
         });
         invitationSentListenerAdded = true;
@@ -27,10 +31,6 @@ const socketService = {
 
     isInvitationSentListenerAdded: () => {
         return invitationSentListenerAdded;
-    },
-
-    sendChatMessage: (message) => {
-        socket.emit('chatMessage', message);
     },
 };
 

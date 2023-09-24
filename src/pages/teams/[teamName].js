@@ -24,13 +24,13 @@ const SingleTeam = () => {
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
 
     useEffect(() => {
-        socketService.onInvitationSent((data) => {
-            dispatch(setLatestInvite(data));
-        });
+            socketService.onInvitationSent((data) => {
+                dispatch(setLatestInvite(data));
+            });
         return () => {
             socketService.removeInvitationSentListener();
         };
-    }, [dispatch]);
+    }, [dispatch, user]);
 
     useEffect(() => {
         const fetchData = async (status) => {
@@ -65,19 +65,19 @@ const SingleTeam = () => {
             <Head>
                 <title>Team | Agile</title>
             </Head>
-            <div className="bg-[#FFF8F8] px-8 py-8">
-                {user && user?.user?.role === "admin" ?  (
+            <div className="bg-[#FFF8F8] px-8 py-8 relative">
+                {user && user?.user?.role === "admin" ? (
                     <div className="flex items-center justify-between">
                         <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
                         <div className="flex items-center gap-x-4">
-                            <button className="btn capitalize capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8]">Assign a group </button>
+                            <button className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8]">Assign a group </button>
                             <button className="btn capitalize bg-[#4C54F8] text-[#fff] font-bold hover:border-[#4C54F8] hover:bg-transparent border-[2px] border-[#4C54F8] hover:text-[#4C54F8]">Add a member </button>
                         </div>
-                        </div>
+                    </div>
                 ) : (
-                  <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
+                    <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
                 )}
-                
+
                 <div className="flex items-center gap-x-4 pt-4">
                     <button
                         className={`btn bg-[#fff] border-[2px]rounded-lg   font-bold text-md capitalize hover:bg-[#CECECE] hover:border-[#4C54F84D] ${status === "active" ? 'border-[#4C54F8] border-[2px] text-[#4C54F8]' : 'border-[#4C54F84D] text-[#4C54F84D]'}`}
@@ -146,8 +146,8 @@ const SingleTeam = () => {
                                             <td className=" capitalize">{status}</td>
                                             <td className="capitalize text-center">{teamRole}</td>
                                             <td className="flex items-center gap-x-2">
-                                                <button><IoIosArrowDown/></button>
-                                                <button><IoIosClose/></button>
+                                                <button><IoIosArrowDown /></button>
+                                                <button><IoIosClose /></button>
                                             </td>
                                         </tr>
                                     );
@@ -157,7 +157,7 @@ const SingleTeam = () => {
                     )}
                 </div>
             </div>
-            {latestInvite && <div className="flex justify-center items-center">
+            {latestInvite && <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
                 <InviteModal invitation={latestInvite} user={user} />
             </div>}
         </div>
