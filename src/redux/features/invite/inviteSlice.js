@@ -1,5 +1,5 @@
 // inviteSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie'; // Import the library for handling cookies
 import { baseUrl } from '../../../../config';
 import { toast } from 'react-toastify';
@@ -18,11 +18,12 @@ const makeApiRequestWithToken = async (url, method, body) => {
             body: JSON.stringify(body),
         });
         // Handle response as needed
-        toast.success("Successful")
+        toast(response?.message)
         const data = await response.json();
         return data;
     } catch (error) {
         // Handle errors as needed
+        toast.error(error?.message);
         throw error;
     }
 };
@@ -30,14 +31,14 @@ const makeApiRequestWithToken = async (url, method, body) => {
 // Define an async thunk for sending invitations
 export const sendInvitation = createAsyncThunk(
     'invitations/sendInvitation',
-    async (teamName) => {
+    async ({ data, teamName }) => {
+        const { email, teamRole } = data;
         const url = `${baseUrl}/user/send-invitation/${teamName}`;
         const method = 'PATCH';
-        const body = {email, teamRole}; // Adjust the request body as needed
+        const body = { email, teamRole };
         return makeApiRequestWithToken(url, method, body);
     }
 );
-
 // Define an async thunk for accepting invitations
 export const acceptInvitation = createAsyncThunk(
     'invitations/acceptInvitation',
@@ -65,10 +66,19 @@ const inviteSlice = createSlice({
     name: 'invitations',
     initialState: {
         latestInvite: null,
+        formInviteData: {
+            email: '',
+            teamRole: '',
+        },
+        currentInviteStep: 1,
     },
     reducers: {
         setLatestInvite: (state, action) => {
             state.latestInvite = action.payload;
+        },
+        incrementInviteStep: (state) => {
+            // Increment the current step
+            state.currentInviteStep += 1;
         },
     },
     extraReducers: (builder) => {
@@ -87,5 +97,7 @@ const inviteSlice = createSlice({
     },
 });
 
-export const { setLatestInvite } = inviteSlice.actions;
+export const updateInviteFormData = createAction('user/updateInviteFormData');
+export const selectCurrentInviteStep = (state) => state.invitations.currentInviteStep;
+export const { setLatestInvite, incrementInviteStep } = inviteSlice.actions;
 export default inviteSlice.reducer;

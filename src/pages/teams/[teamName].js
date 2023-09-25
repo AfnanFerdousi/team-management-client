@@ -14,6 +14,7 @@ import TeamWelcome from '../../components/TeamWelcome';
 import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
 import useSingleUser from '../../hooks/useSingleUser';
 import Image from "next/image"
+import SendInvitationModal from '../../components/SendInvitationModal';
 const SingleTeam = () => {
     const router = useRouter()
     const token = Cookies.get("accessToken");
@@ -27,6 +28,7 @@ const SingleTeam = () => {
     const [activeMembers, setActiveMembers] = useState([]);
     const [pendingMembers, setPendingMembers] = useState([]);
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (!token) {
@@ -71,6 +73,13 @@ const SingleTeam = () => {
         fetchData(status);
     }, [teamName, status, token]);
 
+    const openInviteModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeInviteModal = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <div>
@@ -83,7 +92,7 @@ const SingleTeam = () => {
                         <h2 className="text-[#000] text-xl font-bold">Team ({teamName})</h2>
                         <div className="flex items-center gap-x-4">
                             <button className="btn capitalize bg-transparent text-[#4C54F8] font-bold hover:border-[#4C54F8] hover:bg-[#4C54F8] hover:text-[#fff] border-[2px] border-[#4C54F8]">Assign a group </button>
-                            <button className="btn capitalize bg-[#4C54F8] text-[#fff] font-bold hover:border-[#4C54F8] hover:bg-transparent border-[2px] border-[#4C54F8] hover:text-[#4C54F8]">Add a member </button>
+                            <button onClick={() => openInviteModal()} className="btn capitalize bg-[#4C54F8] text-[#fff] font-bold hover:border-[#4C54F8] hover:bg-transparent border-[2px] border-[#4C54F8] hover:text-[#4C54F8]">Add a member </button>
                         </div>
                     </div>
                 ) : (
@@ -118,65 +127,73 @@ const SingleTeam = () => {
 
                 </div>
 
- {status === "" ? (
-                    <TeamWelcome role={singleUser?.singleUser?.role}/>
+                {status === "" ? (
+                    <TeamWelcome role={singleUser?.singleUser?.role} />
                 ) : (
-                <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
-                    <table className="w-full text-left">
-                        <thead className="text-[#202020] text-[16px] font-bold border-b-none">
-                            <tr>
-                                <th className='pl-[4rem] pb-4 w-[41%]'>Name</th>
-                                <th>Title</th>
-                                <th className="w-[20%]">Status</th>
-                                <th className="w-[21%]">Role</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                    </table>
-
-                    {loading ? (
-                        <Loader />
-                    ) : (
+                    <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
                         <table className="w-full text-left">
-                            <tbody className="pt-4 gap-y-2">
-                                {user && (status === "active" ? activeMembers : pendingMembers).map((user) => {
-                                    const team = user?.teams.find((team) => team.teamName === teamName);
-                                    const teamRole = team ? team.teamRole : "";
-                                    const status = team ? team.status : "";
-                                    return (
-                                        <tr className="mb-2 border-[1px] border-[#3267B1] !rounded-xl" key={user?._id}>
-                                            <td className="flex items-center gap-x-4 p-2 ">
-                                                <div className="avatar placeholder">
-                                                    <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
-                                                        <span className="capitalize">{user?.username?.charAt(0)}</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h2 className="text-[#202020] font-bold text-[16px] capitalize">{user?.username}</h2>
-                                                    <h2 className="text-[#20202099]  text-[12px]">{user?.email}</h2>
-                                                </div>
-                                            </td>
-                                            <td className=" capitalize">{teamRole}</td>
-                                            <td className=" capitalize">{status}</td>
-                                            <td className="capitalize text-center">{teamRole}</td>
-                                            <td className="flex items-center gap-x-2">
-                                                <button><IoIosArrowDown /></button>
-                                                <button><IoIosClose /></button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
+                            <thead className="text-[#202020] text-[16px] font-bold border-b-none">
+                                <tr>
+                                    <th className='pl-[4rem] pb-4 w-[41%]'>Name</th>
+                                    <th>Title</th>
+                                    <th className="w-[20%]">Status</th>
+                                    <th className="w-[21%]">Role</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                         </table>
-                    )}
-                </div>)}
-               
+
+                        {loading ? (
+                            <Loader />
+                        ) : (
+                            <table className="w-full text-left">
+                                <tbody className="pt-4 gap-y-2">
+                                    {user && (status === "active" ? activeMembers : pendingMembers).map((user) => {
+                                        const team = user?.teams.find((team) => team.teamName === teamName);
+                                        const teamRole = team ? team.teamRole : "";
+                                        const status = team ? team.status : "";
+                                        return (
+                                            <tr className="mb-2 border-[1px] border-[#3267B1] !rounded-xl" key={user?._id}>
+                                                <td className="flex items-center gap-x-4 p-2 ">
+                                                    <div className="avatar placeholder">
+                                                        <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-10 border-[2px] border-[#00000033]">
+                                                            <span className="capitalize">{user?.username?.charAt(0)}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h2 className="text-[#202020] font-bold text-[16px] capitalize">{user?.username}</h2>
+                                                        <h2 className="text-[#20202099]  text-[12px]">{user?.email}</h2>
+                                                    </div>
+                                                </td>
+                                                <td className=" capitalize">{teamRole}</td>
+                                                <td className=" capitalize">{status}</td>
+                                                <td className="capitalize text-center">{teamRole}</td>
+                                                <td className="flex items-center gap-x-2">
+                                                    <button><IoIosArrowDown /></button>
+                                                    <button><IoIosClose /></button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>)}
+
             </div>
-            {latestInvite &&
+            {latestInvite && latestInvite?.data?.email === email &&
                 <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
                     <InviteModal invitation={latestInvite} user={singleUser} />
                 </div>
             }
+
+            <dialog
+                id="my_modal_1"
+                className="modal"
+                open={isModalOpen}
+            >
+                <SendInvitationModal closeModal={closeInviteModal} teamName={teamName} />
+            </dialog>
         </div>
     );
 };

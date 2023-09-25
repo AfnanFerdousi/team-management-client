@@ -2,7 +2,6 @@ import React from 'react';
 import Link from "next/link"
 
 const TeamCard = ({team}) => {
-    console.log(team)
     return (
      <>
         <Link href={`/teams/${team?.teamName}`}>

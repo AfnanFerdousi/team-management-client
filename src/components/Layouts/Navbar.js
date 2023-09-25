@@ -33,8 +33,7 @@ const Navbar = () => {
         window.location.href = "/login"
     }
 
-    const dispatch = useDispatch(); // Get the dispatch function from Redux
-    // console.log(user)
+    const dispatch = useDispatch(); 
     useEffect(() => {
         if (singleUser) {
             setDismissedInvitations([]);
@@ -64,10 +63,10 @@ const Navbar = () => {
 
     return (
         <div className="bg-[#FFF9F9] flex items-center justify-between px-8 py-4">
-            <div className="flex items-center gap-x-2">
+              <Link href="/home" className="flex items-center gap-x-2">
                 <Image src={logo} alt="logo" width={50} height={50} className="mb-4" />
                 <h2 className="text-[#283163] font-semibold text-2xl">Agile</h2>
-            </div>
+              </Link>
             <div>
                 <ul className="flex items-center gap-x-4 text-[#283163] relative">
                     <li>Availability</li>
@@ -126,7 +125,7 @@ const Navbar = () => {
 
                         {show && <div className="absolute top-[30px] right-0 bg-white border border-[#b8b7b5] p-4 rounded-lg shadow w-64">
                             <ul>
-                                <li><Link href="/teams">My teams</Link></li>
+                                <li><Link href="/home">My teams</Link></li>
                                 <li className="text-red-500 font-bold pt-2"><button onClick={logout}>logout</button></li>
                             </ul>
                             

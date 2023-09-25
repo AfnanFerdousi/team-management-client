@@ -4,19 +4,15 @@ import { useDispatch } from 'react-redux';
 
 const InviteModal = ({ invitation, user }) => {
   const [show, setShow] = useState(true)
-  const dispatch = useDispatch(); // Get the dispatch function from Redux
-console.log(user)
+  const dispatch = useDispatch(); 
   const onReject = () => {
     // Dispatch the rejectInvitation action
     dispatch(rejectInvitation({ userId: user._id, teamName: invitation.teamName }));
-    // You can also handle the modal closing logic here
     setShow(false);
   };
 
   const onAccept = () => {
-    // Dispatch the acceptInvitation action
     dispatch(acceptInvitation({ userId: user._id, teamName: invitation.teamName }));
-    // You can also handle the modal closing logic here
     setShow(false);
   };
   return (

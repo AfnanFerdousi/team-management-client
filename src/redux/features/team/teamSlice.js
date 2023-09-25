@@ -5,8 +5,7 @@ import { baseUrl } from '../../../../config';
 
 // Create an async action for getting teams
 export const fetchTeams = createAsyncThunk('/team', async () => {
-    const token = Cookies.get('accessToken'); // Get the token from cookies
-    console.log(token);
+    const token = Cookies.get('accessToken'); 
     try {
         const response = await axios.get(`${baseUrl}/team`, {
             headers: {

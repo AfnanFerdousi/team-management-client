@@ -11,8 +11,7 @@ function useUser() {
         const token = Cookies.get('accessToken');
         if (token) {
             try {
-                const tokenData = JSON.parse(atob(token.split('.')[1])); // Decoding JWT payload
-                console.log(tokenData)
+                const tokenData = JSON.parse(atob(token.split('.')[1])); 
                 setUser(tokenData);
                 setUserLoading(false)
             } catch (error) {
