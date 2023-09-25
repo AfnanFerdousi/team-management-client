@@ -15,7 +15,7 @@ function useSingleUser(email) {
         const axiosInstance = axios.create({
             baseURL: `https://tm-server-seven.vercel.app/api/v1`,
             headers: {
-                Authorization: `${token}`,
+                authorization: `${token}`,
             },
         });
 

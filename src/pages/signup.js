@@ -23,6 +23,7 @@ const SignUp = () => {
             if (result.status === 200) {
                 console.log(result.data);
                 toast.success('Signup successful!');
+                window.location.href = "/login";
             } else {
                 console.log(result.data);
                 toast.error('Signup failed. Please try again.');
