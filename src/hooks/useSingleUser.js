@@ -8,12 +8,12 @@ function useSingleUser(email) {
 
     useEffect(() => {
         setLoading(true);
-        const token = Cookies.get("accessToken"); 
+        const token = Cookies.get("accessToken");
         if (!token) {
             return;
         }
         const axiosInstance = axios.create({
-            baseURL: `http://localhost:5000/api/v1`,
+            baseURL: `https://tm-server-seven.vercel.app/api/v1`,
             headers: {
                 Authorization: `${token}`,
             },

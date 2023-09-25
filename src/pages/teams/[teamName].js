@@ -15,6 +15,7 @@ import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
 import useSingleUser from '../../hooks/useSingleUser';
 import Image from "next/image"
 import SendInvitationModal from '../../components/SendInvitationModal';
+import { baseUrl } from '../../../config';
 const SingleTeam = () => {
     const router = useRouter()
     const token = Cookies.get("accessToken");
@@ -50,7 +51,7 @@ const SingleTeam = () => {
         const fetchData = async (status) => {
             try {
                 setLoading(true);
-                const url = `http://localhost:5000/api/v1/user?teamName=${teamName}&status=${status}`
+                const url = `${baseUrl}/user?teamName=${teamName}&status=${status}`
                 const result = await axios.get(url, {
                     headers: {
                         authorization: `${token}`,

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { baseUrl } from './../../config';
 
 
 const SignUp = () => {
@@ -18,7 +19,7 @@ const SignUp = () => {
 
     const onSignup = async (data) => {
         try {
-            const result = await axios.post('http://localhost:5000/api/v1/user/create-user', data);
+            const result = await axios.post(`${baseUrl}/user/create-user`, data);
             if (result.status === 200) {
                 console.log(result.data);
                 toast.success('Signup successful!');
