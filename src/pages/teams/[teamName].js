@@ -119,7 +119,7 @@ const SingleTeam = () => {
                 </div>
 
  {status === "" ? (
-                    <TeamWelcome/>
+                    <TeamWelcome role={singleUser?.singleUser?.role}/>
                 ) : (
                 <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
                     <table className="w-full text-left">
