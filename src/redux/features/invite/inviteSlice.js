@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie'; // Import the library for handling cookies
 import { baseUrl } from '../../../../config';
+import { toast } from 'react-toastify';
 
 // Define a function to get the user token from cookies
 // Define an async thunk for making API requests with the token
@@ -17,6 +18,7 @@ const makeApiRequestWithToken = async (url, method, body) => {
             body: JSON.stringify(body),
         });
         // Handle response as needed
+        toast.success("Successful")
         const data = await response.json();
         return data;
     } catch (error) {

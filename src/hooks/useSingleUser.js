@@ -5,18 +5,13 @@ import Cookies from "js-cookie";
 function useSingleUser(email) {
     const [singleUser, setSingleUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    console.log(singleUser)
 
     useEffect(() => {
         setLoading(true);
-        const token = Cookies.get("accessToken"); // Replace "accessToken" with your actual cookie name
-
+        const token = Cookies.get("accessToken"); 
         if (!token) {
-            // Handle the case when there's no access token in cookies
             return;
         }
-
-        // Create an Axios instance with the access token in the header
         const axiosInstance = axios.create({
             baseURL: `http://localhost:5000/api/v1`,
             headers: {
@@ -24,7 +19,6 @@ function useSingleUser(email) {
             },
         });
 
-        // Make the GET request using the Axios instance
         axiosInstance
             .get(`/user/${email}`)
             .then((response) => {

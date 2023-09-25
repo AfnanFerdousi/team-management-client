@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeams, selectError, selectStatus, selectTeams, openModal } from '../redux/features/team/teamSlice';
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
-import { baseUrl } from '../../config';
 import CreateTeamModal from '../components/CreateTeamModal';
 
 const AdminHome = () => {
@@ -19,9 +18,6 @@ const AdminHome = () => {
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log(error)
-
-
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
@@ -72,7 +68,7 @@ const AdminHome = () => {
                         <dialog
                 id="my_modal_1"
                 className="modal"
-                open={isModalOpen} // Use the open attribu
+                open={isModalOpen} 
             >
                 <CreateTeamModal closeModal={closeCreateTeamModal} />
             </dialog>
