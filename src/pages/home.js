@@ -5,12 +5,14 @@ import useSingleUser from '../hooks/useSingleUser';
 import useUser from '../hooks/useUser';
 import Cookies from 'js-cookie';
 import { BsPlus } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTeams, selectError, selectStatus, selectTeams, openModal } from '../redux/features/team/teamSlice';
+import {  useSelector } from 'react-redux';
+import {  selectError, selectStatus, selectTeams, openModal } from '../redux/features/team/teamSlice';
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
 import CreateTeamModal from '../components/CreateTeamModal';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { baseUrl } from '../../config';
 
 const AdminHome = () => {
     const router = useRouter()
@@ -18,23 +20,37 @@ const AdminHome = () => {
     const token = Cookies.get("accessToken")
     const singleUser = useSingleUser(email)
     const user = useUser()
-    const dispatch = useDispatch();
-    const teamData = useSelector(selectTeams);
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [localTeams, setLocalTeams] = useState(null);
     
-   useEffect(() => {
-        if (!token) {
-            router.push('/login');
-        } 
-        if (user?.role === "admin") {
-            dispatch(fetchTeams())
-        } else {
-            setLocalTeams(singleUser?.singleUser?.teams);
-        }
-    }, [dispatch, router, token, singleUser]);
+    useEffect(() => {
+        const fetchTeamsData = async () => {
+            try {
+                if (!token) {
+                    router.push('/login');
+                } else {
+                    if (user.user.role === "admin") {
+                        const response = await axios.get(`${baseUrl}/team`, {
+                            headers: {
+                                authorization: `${token}`, // Include the token in the headers
+                            },
+                        });
+
+                        setLocalTeams(response?.data?.data);
+                    } else {
+                        setLocalTeams(singleUser?.singleUser?.teams);
+                    }
+                }
+            } catch (error) {
+                // Handle any errors that may occur during the request
+                console.error("Error fetching teams:", error);
+            }
+        };
+
+        fetchTeamsData();
+    }, [router, token, user?.user?.role, singleUser?.singleUser?.teams]);
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
@@ -43,8 +59,9 @@ const AdminHome = () => {
     const closeCreateTeamModal = () => {
         setIsModalOpen(false);
     };
-    console.log(teamData)
-    const teams = singleUser && singleUser?.singleUser?.role === "user" ? localTeams : teamData?.data;
+    console.log(user?.user?.role)
+    console.log(localTeams)
+    
 
     return (
         <div>
@@ -73,7 +90,7 @@ const AdminHome = () => {
                         : status === "failed" ? (
                             <p>Error: {error}</p>
                         ) : (
-                            teams && teams.map((team) => {
+                                localTeams && localTeams.map((team) => {
                                 return (
                                     <TeamCard team={team} key={team?._id} />
                                 )

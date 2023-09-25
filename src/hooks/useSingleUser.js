@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { baseUrl } from "../../config";
 
 function useSingleUser(email) {
     const [singleUser, setSingleUser] = useState(null);
@@ -13,7 +14,7 @@ function useSingleUser(email) {
             return;
         }
         const axiosInstance = axios.create({
-            baseURL: `https://tm-server-seven.vercel.app/api/v1`,
+            baseURL: baseUrl,
             headers: {
                 authorization: `${token}`,
             },
