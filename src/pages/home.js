@@ -25,10 +25,10 @@ const AdminHome = () => {
         if (!token) {
             // Run this on the client side
             router.push('/login');
-        } else {
+        } if (singleUser?.singleUser?.role === "admin") {
             dispatch(fetchTeams())
         }
-    }, [dispatch, router, token]);
+    }, [dispatch, router, token, singleUser]);
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
