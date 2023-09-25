@@ -10,11 +10,10 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import Loader from '../../components/shared/Loader';
+import TeamWelcome from '../../components/TeamWelcome';
 import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
 import useSingleUser from '../../hooks/useSingleUser';
-import { withAuth } from '../../auth';
-import { useRouter } from 'next/router';
-
+import Image from "next/image"
 const SingleTeam = () => {
     const router = useRouter()
     const token = Cookies.get("accessToken");
@@ -23,7 +22,7 @@ const SingleTeam = () => {
     const user = useUser();
     const singleUser = useSingleUser(email)
     const dispatch = useAppDispatch();
-    const [status, setStatus] = useState("active");
+    const [status, setStatus] = useState("");
     const [loading, setLoading] = useState(true);
     const [activeMembers, setActiveMembers] = useState([]);
     const [pendingMembers, setPendingMembers] = useState([]);
@@ -119,7 +118,9 @@ const SingleTeam = () => {
 
                 </div>
 
-                {/* table */}
+ {status === "" ? (
+                    <TeamWelcome/>
+                ) : (
                 <div className="bg-[#fff] border-[1px] border-[#4C54F8] p-4 rounded-lg mt-8">
                     <table className="w-full text-left">
                         <thead className="text-[#202020] text-[16px] font-bold border-b-none">
@@ -168,7 +169,8 @@ const SingleTeam = () => {
                             </tbody>
                         </table>
                     )}
-                </div>
+                </div>)}
+               
             </div>
             {latestInvite &&
                 <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">

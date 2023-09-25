@@ -8,8 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeams, selectError, selectStatus, selectTeams, openModal } from '../redux/features/team/teamSlice';
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
-import CreateTeamModal from '../components/CreateTeamModal';
-import { withAuth } from '../auth';
+import CreateTeamModal from '../components/CreateTeamModal'; 
 import { useRouter } from 'next/router';
 
 const AdminHome = () => {
