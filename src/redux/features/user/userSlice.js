@@ -6,6 +6,7 @@ import { baseUrl } from '../../../../config';
 // Define the initial state
 const initialState = {
     users: [],
+    teams: [],
     loading: false,
     error: null,
 };
@@ -31,7 +32,11 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+        updateUserTeams: (state, action) => {
+            state.teams = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.pending, (state) => {
@@ -48,4 +53,5 @@ const userSlice = createSlice({
             });
     },
 });
+export const { updateUserTeams } = userSlice.actions;
 export default userSlice.reducer;

@@ -21,11 +21,9 @@ const SignUp = () => {
         try {
             const result = await axios.post(`${baseUrl}/user/create-user`, data);
             if (result.status === 200) {
-                console.log(result.data);
                 toast.success('Signup successful!');
                 window.location.href = "/login";
             } else {
-                console.log(result.data);
                 toast.error('Signup failed. Please try again.');
             }
         } catch (error) {

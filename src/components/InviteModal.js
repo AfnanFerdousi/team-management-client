@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
+import { acceptInvitation, rejectInvitation } from '../redux/features/invite/inviteSlice';
 
 const InviteModal = ({ invitation, user }) => {
   const [show, setShow] = useState(true)
@@ -14,6 +15,7 @@ const InviteModal = ({ invitation, user }) => {
   const onAccept = () => {
     dispatch(acceptInvitation({ userId: user._id, teamName: invitation.teamName }));
     setShow(false);
+    window.location.href=`/teams/${invitation.teamName}`
   };
   return (
     <div className={`bg-[#FEFEFE] border-[1px] border-[#2020204D] rounded-lg w-[35vw]  ${show ? ' block' : 'hidden'} `}>

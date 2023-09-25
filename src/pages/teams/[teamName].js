@@ -47,6 +47,7 @@ const SingleTeam = () => {
         };
     }, [dispatch, user]);
 
+
     useEffect(() => {
         const fetchData = async (status) => {
             try {
@@ -182,7 +183,7 @@ const SingleTeam = () => {
                     </div>)}
 
             </div>
-            {latestInvite && latestInvite?.data?.email === email &&
+            {latestInvite && latestInvite?.email === email &&
                 <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
                     <InviteModal invitation={latestInvite} user={singleUser} />
                 </div>

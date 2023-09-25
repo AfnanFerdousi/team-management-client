@@ -53,7 +53,7 @@ const TeamWelcome = ({role}) => {
 
                         </div>
 ) : (
-     <div className="flex flex-col justify-center gap-y-6">
+     <div className="flex flex-col gap-y-6 items-center mt-6">
                              <div className="avatar">
                                 <div className="w-[14rem] rounded-full">
                                     <Image

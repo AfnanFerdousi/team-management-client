@@ -13,6 +13,10 @@ import CreateTeamModal from '../components/CreateTeamModal';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { baseUrl } from '../../config';
+import { useAppDispatch, useAppSelector } from '../redux/hook';
+import socketService from '../hooks/socketService';
+import { setLatestInvite } from '../redux/features/invite/inviteSlice';
+import InviteModal from '../components/InviteModal';
 
 const AdminHome = () => {
     const router = useRouter()
@@ -22,9 +26,37 @@ const AdminHome = () => {
     const user = useUser()
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
+    const dispatch = useAppDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [localTeams, setLocalTeams] = useState(null);
+
+    const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
+
+     useEffect(() => {
+        if (!token) {
+            // Run this on the client side
+            router.push('/login');
+        }
+     }, [router, token]);
     
+  useEffect(() => {
+    socketService.onInvitationSent((data) => {
+        dispatch(setLatestInvite(data));
+    });
+
+    // Add a listener for invitationAccepted event
+    socketService.onInvitationAccepted((data) => {
+        fetchTeamsData();
+    });
+
+    return () => {
+        socketService.removeInvitationSentListener();
+        // Remove the invitationAccepted listener when the component unmounts
+        socketService.removeInvitationAcceptedListener();
+    };
+}, [dispatch]);
+
+
     useEffect(() => {
         const fetchTeamsData = async () => {
             try {
@@ -59,8 +91,6 @@ const AdminHome = () => {
     const closeCreateTeamModal = () => {
         setIsModalOpen(false);
     };
-    console.log(user?.user?.role)
-    console.log(localTeams)
     
 
     return (
@@ -99,6 +129,11 @@ const AdminHome = () => {
                     }
                 </div>
             </div>
+            {latestInvite && latestInvite?.email === email &&
+                <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
+                    <InviteModal invitation={latestInvite} user={singleUser} />
+                </div>
+            }
             <dialog
                 id="my_modal_1"
                 className="modal"

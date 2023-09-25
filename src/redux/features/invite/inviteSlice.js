@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie'; // Import the library for handling cookies
 import { baseUrl } from '../../../../config';
 import { toast } from 'react-toastify';
+import socketService from '../../../hooks/socketService';
+import {updateUserTeams} from "../user/userSlice"
 
 // Define a function to get the user token from cookies
 // Define an async thunk for making API requests with the token
@@ -40,15 +42,38 @@ export const sendInvitation = createAsyncThunk(
     }
 );
 // Define an async thunk for accepting invitations
+// export const acceptInvitation = createAsyncThunk(
+//     'invitations/acceptInvitation',
+//     async ({ userId, teamName }) => {
+//         const url = `${baseUrl}/user/${userId}/accept-invitation/${teamName}`;
+//         const method = 'PATCH';
+//         const body = {}; // Adjust the request body as needed
+//         return makeApiRequestWithToken(url, method, body);
+//     }
+// );
+
 export const acceptInvitation = createAsyncThunk(
     'invitations/acceptInvitation',
-    async ({ userId, teamName }) => {
+    async ({ userId, teamName }, { dispatch }) => { // Pass dispatch as a parameter
         const url = `${baseUrl}/user/${userId}/accept-invitation/${teamName}`;
         const method = 'PATCH';
         const body = {}; // Adjust the request body as needed
-        return makeApiRequestWithToken(url, method, body);
+
+        try {
+            const response = await makeApiRequestWithToken(url, method, body);
+
+            dispatch(updateUserTeams(response.updatedTeams));
+            // Emit a Socket.IO event to notify other clients
+            socketService.emitAcceptInvitation({ userId, teamName });
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
     }
 );
+
+
 
 // Define an async thunk for rejecting invitations
 export const rejectInvitation = createAsyncThunk(
