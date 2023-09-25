@@ -29,9 +29,12 @@ const SingleTeam = () => {
     const [pendingMembers, setPendingMembers] = useState([]);
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
 
-    if(!token){
-        router.push("/login")
-    }
+    useEffect(() => {
+        if (!token) {
+            // Run this on the client side
+            router.push('/login');
+        }
+    }, []);
 
     useEffect(() => {
         socketService.onInvitationSent((data) => {

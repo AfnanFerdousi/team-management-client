@@ -22,10 +22,14 @@ const AdminHome = () => {
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    if(!token){
-        router.push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            // Run this on the client side
+            router.push('/login');
+        } else {
+            dispatch(fetchTeams())
+        }
+    }, []);
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
