@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MainLayout from '../components/Layouts/MainLayout';
 import Head from "next/head"
 import useSingleUser from '../hooks/useSingleUser';
+import useUser from '../hooks/useUser';
 import Cookies from 'js-cookie';
 import { BsPlus } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,17 +17,22 @@ const AdminHome = () => {
     const email = Cookies.get("email")
     const token = Cookies.get("accessToken")
     const singleUser = useSingleUser(email)
+    const user = useUser()
     const dispatch = useDispatch();
     const teamData = useSelector(selectTeams);
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    useEffect(() => {
+    const [localTeams, setLocalTeams] = useState(null);
+    
+   useEffect(() => {
         if (!token) {
-            // Run this on the client side
             router.push('/login');
-        } if (singleUser?.singleUser?.role === "admin") {
+        } 
+        if (user?.role === "admin") {
             dispatch(fetchTeams())
+        } else {
+            setLocalTeams(singleUser?.singleUser?.teams);
         }
     }, [dispatch, router, token, singleUser]);
 
@@ -38,7 +44,7 @@ const AdminHome = () => {
         setIsModalOpen(false);
     };
     console.log(teamData)
-    const teams = singleUser && singleUser?.singleUser?.role === "user" ? singleUser?.singleUser?.teams : teamData?.data
+    const teams = singleUser && singleUser?.singleUser?.role === "user" ? localTeams : teamData?.data;
 
     return (
         <div>
