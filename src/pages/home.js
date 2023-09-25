@@ -28,7 +28,7 @@ const AdminHome = () => {
         } else {
             dispatch(fetchTeams())
         }
-    }, []);
+    }, [dispatch, router, token]);
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
@@ -38,7 +38,7 @@ const AdminHome = () => {
         setIsModalOpen(false);
     };
     console.log(teamData)
-    const teams = singleUser && singleUser?.singleUser?.role === "admin" ? teamData?.data : singleUser?.singleUser?.teams
+    const teams = singleUser && singleUser?.singleUser?.role === "user" ? singleUser?.singleUser?.teams : teamData?.data
 
     return (
         <div>
