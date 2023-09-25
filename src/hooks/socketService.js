@@ -3,7 +3,7 @@
 import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000'); // Replace with your server URL
+const socket = io('https://tm-server-seven.vercel.app/api/v1'); // Replace with your server URL
 
 let invitationSentListenerAdded = false;
 const email = Cookies.get("email");
