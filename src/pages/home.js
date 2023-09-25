@@ -9,15 +9,23 @@ import { fetchTeams, selectError, selectStatus, selectTeams, openModal } from '.
 import TeamCard from '../components/shared/TeamCard';
 import Loader from '../components/shared/Loader';
 import CreateTeamModal from '../components/CreateTeamModal';
+import { withAuth } from '../auth';
+import { useRouter } from 'next/router';
 
 const AdminHome = () => {
+    const router = useRouter()
     const email = Cookies.get("email")
+    const token = Cookies.get("accessToken")
     const singleUser = useSingleUser(email)
     const dispatch = useDispatch();
     const teamData = useSelector(selectTeams);
     const status = useSelector(selectStatus);
     const error = useSelector(selectError);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    if(!token){
+        router.push('/login')
+    }
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);
@@ -76,7 +84,7 @@ const AdminHome = () => {
     );
 };
 
-export default AdminHome;
 AdminHome.getLayout = function getLayout(page) {
     return <MainLayout> {page} </MainLayout>;
 }
+export default AdminHome;

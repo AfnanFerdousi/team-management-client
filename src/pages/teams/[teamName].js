@@ -12,8 +12,11 @@ import axios from 'axios';
 import Loader from '../../components/shared/Loader';
 import { IoIosArrowDown, IoIosClose } from 'react-icons/io';
 import useSingleUser from '../../hooks/useSingleUser';
+import { withAuth } from '../../auth';
+import { useRouter } from 'next/router';
 
 const SingleTeam = () => {
+    const router = useRouter()
     const token = Cookies.get("accessToken");
     const email = Cookies.get("email");
     const { teamName } = useRouter().query;
@@ -25,6 +28,10 @@ const SingleTeam = () => {
     const [activeMembers, setActiveMembers] = useState([]);
     const [pendingMembers, setPendingMembers] = useState([]);
     const latestInvite = useAppSelector((state) => state.invitations.latestInvite);
+
+    if(!token){
+        router.push("/login")
+    }
 
     useEffect(() => {
         socketService.onInvitationSent((data) => {
@@ -163,7 +170,7 @@ const SingleTeam = () => {
             {latestInvite &&
                 <div className="flex justify-center items-center absolute   top-[35%] left-[35%]">
                     <InviteModal invitation={latestInvite} user={singleUser} />
-                </div>               
+                </div>
             }
         </div>
     );
