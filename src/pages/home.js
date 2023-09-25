@@ -28,7 +28,7 @@ const AdminHome = () => {
         } else {
             dispatch(fetchTeams())
         }
-    }, []);
+    }, [dispatch, router, token]);
 
     const openCreateTeamModal = () => {
         setIsModalOpen(true);

@@ -33,7 +33,7 @@ function useInvitations(socketService) {
             // Remove the event listener
             socketService.removeInvitationSentListener(handleInvitationSent);
         };
-    }, [uniqueInvitations, socketService]);
+    }, [uniqueInvitations, socketService, dispatch]);
 
     // Convert the set to an array for rendering
     const invitations = Array.from(uniqueInvitations);
@@ -41,6 +41,4 @@ function useInvitations(socketService) {
     return invitations;
 }
 
-export default {
-    useInvitations
-}
+export default useInvitations

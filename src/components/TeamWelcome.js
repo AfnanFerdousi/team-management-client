@@ -48,7 +48,7 @@ const TeamWelcome = ({role}) => {
                                     />
                                 </div>
                             </div>
-                            <button className="btn btn-sm capitalize border-none bg-[#fff] shadow-lg text-[#000] rounded-md hover:text-[#fff]">Open the FAQ's</button>
+                        <button className="btn btn-sm capitalize border-none bg-[#fff] shadow-lg text-[#000] rounded-md hover:text-[#fff]">Open the FAQ&apos;s</button>
                            </div>
 
                         </div>
@@ -64,7 +64,7 @@ const TeamWelcome = ({role}) => {
                                     />
                                 </div>
                             </div>
-                            <button className="btn btn-sm capitalize border-none bg-[#fff] shadow-lg text-[#000] rounded-md hover:text-[#fff]">Open the FAQ's</button>
+                        <button className="btn btn-sm capitalize border-none bg-[#fff] shadow-lg text-[#000] rounded-md hover:text-[#fff]">Open the FAQ&apos;s</button>
                            </div>
 )}
                     </div>

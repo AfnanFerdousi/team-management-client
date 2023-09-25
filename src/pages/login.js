@@ -67,7 +67,7 @@ const Login = () => {
                         <button type="submit" className='bg-[#533FF0] text-[#FEFEFE] lg:md:text-2xl text-lg font-normal px-8 py-2 rounded-sm mt-4 w-[100%] max-w-sm'>Continue</button>
                     </form>
                     <div className="flex items-center">
-                        <p className="text-[#202020CC] mr-2">Don't have an account?</p>
+                        <p className="text-[#202020CC] mr-2">Don&apos;t have an account?</p>
                         <Link href="/signup" className="text-[#2020204D]">Sign up</Link>
                     </div>
                 </div>

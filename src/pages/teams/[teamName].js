@@ -36,7 +36,7 @@ const SingleTeam = () => {
             // Run this on the client side
             router.push('/login');
         }
-    }, []);
+    }, [router, token]);
 
     useEffect(() => {
         socketService.onInvitationSent((data) => {
@@ -118,7 +118,7 @@ const SingleTeam = () => {
                 <div className=" -space-x-2 my-6">
                     {user && (status === "active" ? activeMembers : pendingMembers).map((user) => {
                         return (
-                            <div className="avatar placeholder">
+                            <div key={user?._id} className="avatar placeholder">
                                 <div className="bg-[#FEFEFE] text-[#3267B1] rounded-full w-12 border-[2px] border-[#3267B1]">
                                     <span className="capitalize font-bold">{user?.username?.charAt(0)}</span>
                                 </div>

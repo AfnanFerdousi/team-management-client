@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["next/core-web-vitals", "plugin:prettier/recommended"],
+  extends: ["next/core-web-vitals"],
   plugins: ["react", "jsx-a11y", "react-hooks"],
   rules: {
     "react/react-in-jsx-scope": "off",
