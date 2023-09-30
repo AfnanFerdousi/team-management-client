@@ -21,7 +21,7 @@ const CreateTeamModal = ({ closeModal }) => {
 
     const handleNextStep = async (data) => {
     // Handle logic to move to the next step
-    if (currentStep === 4) {
+    if (currentStep === 3) {
       try {
         const response = await dispatch(createNewTeam(data));
         const statusCode = response.payload?.statusCode;
@@ -75,7 +75,7 @@ const CreateTeamModal = ({ closeModal }) => {
                         {errors.teamCategory && <span className="text-red-500 text-[12px] mt-[4px]">Team category is required</span>}
                     </div>
                 )}
-                {currentStep === 3 && (
+                {/* {currentStep === 3 && (
                     <div className="flex flex-col">
                         <label className="text-[#AEB7B4] font-bold text-[14px] mb-2">Team logo</label>
                         <input
@@ -86,8 +86,8 @@ const CreateTeamModal = ({ closeModal }) => {
                         />
                         {errors.teamLogo && <span className="text-red-500 text-[12px] mt-[4px]">Team category is required</span>}
                     </div>
-                )}
-                {currentStep === 4 && (
+                )} */}
+                {currentStep === 3 && (
                     <div className="flex flex-col">
                         <label className="text-[#AEB7B4] font-bold text-[14px] mb-2">Description</label>
                         <textarea
@@ -100,7 +100,7 @@ const CreateTeamModal = ({ closeModal }) => {
                         {errors.description && <span className="text-red-500 text-[12px] mt-[4px]">Description is required</span>}
                     </div>
                 )}
-                {currentStep <= 4 && (
+                {currentStep <= 3 && (
                     <div className="flex items-center justify-between mt-6">
                         <button onClick={handleCancel} className="btn capitalize border-[2px] border-[#000] font-bold text-md px-12 rounded-full bg-transparent text-[#000] hover:text-[#fff]">Cancel</button>
                         <button className="btn capitalize bg-[#0A6AF6] border-[#0A6AF6] text-[#fff] font-bold text-md px-12 rounded-full" type="submit">Continue</button>

@@ -9,7 +9,7 @@ const TeamCard = ({team}) => {
         <div className="border-[1px] border-[#4C54F8] rounded-lg py-8 px-6 hover:bg-[#fefefe] hover:transform  hover:scale-105 hover:transition-transform duration-300 ease-in-out">
             <div className="avatar online border-none">
                 <div className="w-20 rounded-full">
-                    <img src={team?.teamLogo} alt={team?.teamName} />
+                            <img src="https://img.freepik.com/premium-photo/elegant-leaf-logo_802059-2.jpg" alt={team?.teamName} />
                 </div>
             </div>
             
